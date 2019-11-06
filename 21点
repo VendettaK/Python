@@ -1,0 +1,55 @@
+import random
+def shuffle(L):     
+    for i in range(len(L)):
+        j = random.randint(0,len(L)-1)
+        L[i],L[j] = L[j],L[i]
+
+def deal(L):
+    W=L[0:2]          #玩家W手上的牌
+    Z=L[2:4]          #庄家Z手上的牌
+    i = 4
+    print("当前玩家手牌：",W,"点数和为：",point(W))
+    print("当前庄家明牌：",Z[1])
+    opt = input("请选择是否继续拿牌（Y：拿牌，N：停牌）：")
+    while opt == "Y" or opt == "y":
+        W.append(L[i])
+        i+=1
+        print("当前玩家手牌：", W)
+        opt = input("请选择是否继续拿牌（Y：拿牌，N：停牌）：")
+    while point(Z) < 17:
+        Z.append(L[i])
+        i+=1
+    return [W,Z]
+
+def point(L):
+    sum = 0
+    num1 = 0
+    for i in L:
+        if i == 1:
+            num1 += 1
+        else:
+            sum += i
+    max = 0
+    for x in range(num1 + 1):
+        sumAce = x + (num1 - x) * 11
+        if (sumAce + sum) <= 21 and sumAce > max:
+            max = sumAce
+            break
+    sum += max
+    return sum
+
+L=[1,2,3,4,5,6,7,8,9,10,10,10,10] * 4
+shuffle(L)
+[W,Z]=deal(L)
+print("最终玩家手牌：", W)
+print("最终玩家手牌点数和为：", point(W))
+print("最终庄家手牌：", Z)
+print("最终庄家手牌点数和为：", point(Z))
+if point(W) > 21:
+    print("Boom! You died!")
+elif point(Z) > 21 or point(Z) < point(W):
+    print("You win!")
+elif point(Z) == point(W):
+    print("It's a draw!")
+else:
+    print("You lost!")
